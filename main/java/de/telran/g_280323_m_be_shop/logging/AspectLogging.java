@@ -33,6 +33,34 @@ public class AspectLogging {
         LOGGER.info("Disengaging method: " + methodName + " from class" + className);
     }
 
+    @AfterReturning("productServiceMethods()")
+    public void afterReturnValueGeneral(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Method " + methodName + " from class" + className + " has returned a value");
+    }
+
+    @AfterThrowing("productServiceMethods()")
+    public void afterThrowingExceptionGeneral(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Method " + methodName + " from class" + className + " has thrown an exception");
+    }
+
+    @Around("execution(* de.telran.g_280323_m_be_shop.service.jpa.JpaProductService.*(..))")
+    public Object aroundProduct(ProceedingJoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Invoked the " + methodName + " method of " + className + " class");
+        try {
+            Object result = joinPoint.proceed();
+            LOGGER.info(methodName + "has delivered the following result: {}", result);
+            return result;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Pointcut("execution(* de.telran.g_280323_m_be_shop.service.jpa.JpaCustomerService.*(..))")
     public void customerServiceMethods() {}
 
@@ -51,6 +79,36 @@ public class AspectLogging {
         LOGGER.info("Disengaging method: " + methodName + " from class" + className);
     }
 
+    @AfterReturning("customerServiceMethods()")
+    public void afterReturnValueGeneralCustomer(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Method " + methodName + " from class" + className + " has returned a value");
+    }
+
+    @AfterThrowing("customerServiceMethods()")
+    public void afterThrowingExceptionGeneralCustomer(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Method " + methodName + " from class" + className + " has thrown an exception");
+    }
+
+    @Around("execution(* de.telran.g_280323_m_be_shop.service.jpa.JpaCustomerService.*(..))")
+    public Object aroundCustomer(ProceedingJoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().toString();
+        LOGGER.info("Invoked the " + methodName + " method of " + className + " class");
+        try {
+            Object result = joinPoint.proceed();
+            LOGGER.info(methodName + "has delivered the following result: {}", result);
+            return result;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+// HOMEWORK ENDS HERE
+    
 //    public void addProduct() {}
 //
 //    @Before("addProduct()")
